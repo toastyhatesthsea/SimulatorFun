@@ -12,7 +12,8 @@ public class BoardScreen implements Screen
 {
 
     OrthographicCamera theCamera;
-    Board aBoard;
+    //Board aBoard;
+    BoardController aBoardController;
     Woods game;
     ShapeRenderer aShape;
     int rows;
@@ -29,9 +30,12 @@ public class BoardScreen implements Screen
         theCamera = new OrthographicCamera();
         theCamera.setToOrtho(false, 800, 480);
 
-        this.aBoard = new Board(rows, columns, (theCamera.viewportWidth-30)/columns, theCamera.viewportHeight/rows);
+        aBoardController = new BoardController(rows, columns, (theCamera.viewportWidth - 30) / columns, theCamera.viewportHeight / rows, 2);
+        aBoardController.createArray();
 
-        aBoard.draw(aShape);
+        //this.aBoard = new Board(rows, columns, (theCamera.viewportWidth-30)/columns, theCamera.viewportHeight/rows);
+
+        //aBoard.draw(aShape);
 
     }
 
@@ -48,7 +52,7 @@ public class BoardScreen implements Screen
         ScreenUtils.clear(0, 0, 0.2f, 1);
         theCamera.update();
         aShape.setProjectionMatrix(theCamera.combined);
-        aBoard.draw(aShape);
+        aBoardController.draw(aShape);
         aShape.begin(ShapeRenderer.ShapeType.Filled);
         aShape.circle(50, 50, 30);
         aShape.end();

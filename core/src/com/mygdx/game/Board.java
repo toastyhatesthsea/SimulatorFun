@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.function.Function;
@@ -11,7 +10,8 @@ public class Board
     float blockPixelHeight;
     int numberOfColumns;
     int numberOfRows;
-    Block[][] blocks;
+
+    Block[][] boardArray;
 
     public Board(int numberOfRows, int numberOfColumns, float blockPixelWidth, float blockPixelHeight)
     {
@@ -20,34 +20,18 @@ public class Board
         this.numberOfRows = numberOfRows;
         this.numberOfColumns = numberOfColumns;
 
-        blocks = new Block[numberOfRows][numberOfColumns];
-        this.createArray();
-    }
-
-    public void createArray()
-    {
-        float y = blockPixelHeight;
-        float x = blockPixelWidth;
-        for (int i = 0; i < blocks.length; i++)
-        {
-            for (int j = 0; j < blocks[i].length; j++)
-            {
-                blocks[i][j] = new GraphicsTile(x, y, Color.GRAY, blockPixelWidth, blockPixelHeight);
-                x += blockPixelWidth;
-            }
-            x = blockPixelWidth;
-            y += blockPixelHeight;
-        }
+        boardArray = new Block[numberOfRows][numberOfColumns];
+        //this.createArray();
     }
 
     public void draw(ShapeRenderer renderer)
     {
-        for (int i = 0; i < blocks.length; i++)
+        for (int i = 0; i < boardArray.length; i++)
         {
-            for (int j = 0; j < blocks[i].length; j++)
+            for (int j = 0; j < boardArray[i].length; j++)
             {
-                Block aBlock = blocks[i][j];
-                aBlock.draw(renderer);
+                //Block aBlock = somePieces[i][j];
+                //aBlock.draw(renderer);
             }
         }
     }
