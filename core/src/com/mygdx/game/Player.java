@@ -19,7 +19,7 @@ public class Player extends Block
         super(x, y, aColor);
         this.width = width;
         this.height = height;
-        this.radius = width / 2;
+        this.radius = width / 3;
         this.name = name;
         Rectangle aRect = new Rectangle((int)x, (int)y, (int)width, (int)height);
     }

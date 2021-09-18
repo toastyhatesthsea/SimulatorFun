@@ -11,6 +11,7 @@ public class Board
     int numberOfColumns;
     int numberOfRows;
 
+    //TODO Change boardArray to Pieces class
     Block[][] boardArray;
 
     public Board(int numberOfRows, int numberOfColumns, float blockPixelWidth, float blockPixelHeight)

@@ -1,9 +1,9 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -28,15 +28,15 @@ public class BoardScreen implements Screen
         this.columns = columns;
         this.aShape = new ShapeRenderer();
         theCamera = new OrthographicCamera();
-        theCamera.setToOrtho(false, 800, 480);
+        theCamera.setToOrtho(true, 800, 480);
 
         aBoardController = new BoardController(rows, columns, (theCamera.viewportWidth - 30) / columns, theCamera.viewportHeight / rows, 2);
         aBoardController.createArray();
+        aBoardController.createPlayers();
 
         //this.aBoard = new Board(rows, columns, (theCamera.viewportWidth-30)/columns, theCamera.viewportHeight/rows);
 
         //aBoard.draw(aShape);
-
     }
 
     @Override
@@ -52,9 +52,11 @@ public class BoardScreen implements Screen
         ScreenUtils.clear(0, 0, 0.2f, 1);
         theCamera.update();
         aShape.setProjectionMatrix(theCamera.combined);
-        aBoardController.draw(aShape);
+        aBoardController.drawBoard(aShape);
+        aBoardController.drawPlayers(aShape);
         aShape.begin(ShapeRenderer.ShapeType.Filled);
-        aShape.circle(50, 50, 30);
+        aShape.setColor(Color.FOREST);
+        aShape.circle(0, 0, 30);
         aShape.end();
         update();
     }

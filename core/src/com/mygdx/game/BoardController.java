@@ -16,7 +16,11 @@ public class BoardController
     int numberOfPlayers;
     Player[] aPlayers;
     String[] playerNames = {"Joel", "Chris", "Mary"};
-
+    int totalPlayerMovements;
+    float minimumX;
+    float maximumX;
+    float minimumY;
+    float maximumY;
 
     public BoardController(int numberOfRows, int numberOfColumns, float pixelBlockWidth, float pixelBlockHeight, int numberOfPlayers)
     {
@@ -36,6 +40,7 @@ public class BoardController
         this.pixelBlockHeight = pixelBlockHeight;
         this.numberOfPlayers = numberOfPlayers;
         this.aPlayers = new Player[numberOfPlayers];
+        this.totalPlayerMovements = 0;
     }
 
     /**
@@ -50,13 +55,17 @@ public class BoardController
         {
             for (int i = 0; i < aPlayers.length; i++)
             {
-                //Next int should start at one
+                //TODO Use X and Y values before multiplied to add to Board array
+                //TODO Make sure to change Board structure to use Pieces() class
                 Random aRan = new Random();
-                float x = aRan.nextInt(numberOfColumns) * pixelBlockWidth + pixelBlockWidth;
-                float y = aRan.nextInt(numberOfRows) * pixelBlockHeight + pixelBlockHeight;
+                float x = aRan.nextInt(numberOfColumns);
+                x *= pixelBlockWidth + pixelBlockWidth;
 
-                Color aColor = new Color((int)x);
-                aPlayers[i] = new Player(x, y, aColor, pixelBlockWidth, pixelBlockHeight, playerNames[i]);
+                float y = aRan.nextInt(numberOfRows);
+                y *= pixelBlockHeight + pixelBlockHeight;
+
+                Color aColor = new Color((int) x);
+                aPlayers[i] = new Player(x + pixelBlockWidth / 2, y + pixelBlockHeight / 2, Color.FIREBRICK, pixelBlockWidth, pixelBlockHeight, playerNames[i]);
             }
             done = true;
         }
@@ -68,6 +77,10 @@ public class BoardController
 
         float y = pixelBlockHeight;
         float x = pixelBlockWidth;
+
+        minimumX = pixelBlockWidth;
+        minimumY = pixelBlockHeight;
+
         for (int i = 0; i < aBoard.boardArray.length; i++)
         {
             for (int j = 0; j < aBoard.boardArray[i].length; j++)
@@ -82,7 +95,7 @@ public class BoardController
         }
     }
 
-    public void draw(ShapeRenderer renderer)
+    public void drawBoard(ShapeRenderer renderer)
     {
         for (int i = 0; i < aBoard.boardArray.length; i++)
         {
@@ -92,6 +105,23 @@ public class BoardController
                 aBlock.draw(renderer);
             }
         }
+    }
+
+    public void drawPlayers(ShapeRenderer renderer)
+    {
+        for (Player somePlayer : aPlayers)
+        {
+            somePlayer.draw(renderer);
+        }
+    }
+
+    public void updatePlayers()
+    {
+        for (Player somePlayer : aPlayers)
+        {
+
+        }
+        totalPlayerMovements++;
     }
 
 
