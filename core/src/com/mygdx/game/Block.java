@@ -6,16 +6,35 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public abstract class Block
 {
 
-    float x, y;
+    int xArrayLocation, yArrayLocation;
     Color color;
 
-    public Block(float x, float y, Color aColor)
+    public Block(int xArrayLocation, int yArrayLocation, Color aColor)
     {
-        this.x = x;
-        this.y = y;
+        this.xArrayLocation = xArrayLocation;
+        this.yArrayLocation = yArrayLocation;
         this.color = aColor;
     }
 
+    public int getxArrayLocation()
+    {
+        return xArrayLocation;
+    }
+
+    public void setxArrayLocation(int xArrayLocation)
+    {
+        this.xArrayLocation = xArrayLocation;
+    }
+
+    public int getyArrayLocation()
+    {
+        return yArrayLocation;
+    }
+
+    public void setyArrayLocation(int yArrayLocation)
+    {
+        this.yArrayLocation = yArrayLocation;
+    }
 
     public Color getColor()
     {
@@ -27,25 +46,6 @@ public abstract class Block
         this.color = color;
     }
 
-    public float getX()
-    {
-        return x;
-    }
-
-    public void setX(int x)
-    {
-        this.x = x;
-    }
-
-    public float getY()
-    {
-        return y;
-    }
-
-    public void setY(float y)
-    {
-        this.y = y;
-    }
 
     public abstract void draw(ShapeRenderer aShape);
 

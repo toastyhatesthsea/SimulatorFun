@@ -9,19 +9,19 @@ public class GraphicsTile extends Block
 
     float width;
     float height;
-    Rectangle rect;
+    //Rectangle rect;
 
-    public GraphicsTile(float x, float y, Color aColor)
+    public GraphicsTile(int xArrayLocation, int yArrayLocation, Color aColor)
     {
-        super(x, y, aColor);
+        super(xArrayLocation, yArrayLocation, aColor);
     }
 
-    public GraphicsTile(float x, float y, Color aColor, float width, float height)
+    public GraphicsTile(int xArrayLocation, int yArrayLocation, Color aColor, float width, float height)
     {
-        super(x, y, aColor);
+        super(xArrayLocation, yArrayLocation, aColor);
         this.width = width;
         this.height = height;
-        rect = new Rectangle(x, y, width, y);
+        //rect = new Rectangle(xDrawLocation, yDrawLocation, width, yDrawLocation);
 
     }
 
@@ -30,7 +30,7 @@ public class GraphicsTile extends Block
     {
         aShape.begin(ShapeRenderer.ShapeType.Line);
         aShape.setColor(color);
-        aShape.rect(x, y, width, height);
+        aShape.rect(width + xArrayLocation * width, height + yArrayLocation * height, width, height);
         aShape.end();
     }
 

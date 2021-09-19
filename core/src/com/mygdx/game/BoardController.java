@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -8,19 +9,19 @@ import java.util.Random;
 public class BoardController
 {
 
-    Board aBoard;
+    Board tileBoard;
+    Board playerBoard;
     int numberOfRows;
     int numberOfColumns;
     float pixelBlockWidth;
     float pixelBlockHeight;
     int numberOfPlayers;
     Player[] aPlayers;
-    String[] playerNames = {"Joel", "Chris", "Mary"};
+    String[] playerNames = {"Joel", "Chris", "Mary", "Lyra"};
     int totalPlayerMovements;
-    float minimumX;
-    float maximumX;
-    float minimumY;
-    float maximumY;
+
+    float playerUpdateTime;
+    float playerMovementTimer;
 
     public BoardController(int numberOfRows, int numberOfColumns, float pixelBlockWidth, float pixelBlockHeight, int numberOfPlayers)
     {
@@ -33,7 +34,8 @@ public class BoardController
             throw new IllegalArgumentException("Number of players must be above 1");
         }
 
-        this.aBoard = new Board(numberOfRows, numberOfColumns, pixelBlockWidth, pixelBlockHeight);
+        this.tileBoard = new Board(numberOfRows, numberOfColumns, pixelBlockWidth, pixelBlockHeight);
+        this.playerBoard = new Board(numberOfRows, numberOfColumns, pixelBlockWidth, pixelBlockHeight);
         this.numberOfRows = numberOfRows;
         this.numberOfColumns = numberOfColumns;
         this.pixelBlockWidth = pixelBlockWidth;
@@ -41,6 +43,8 @@ public class BoardController
         this.numberOfPlayers = numberOfPlayers;
         this.aPlayers = new Player[numberOfPlayers];
         this.totalPlayerMovements = 0;
+        this.playerUpdateTime = 0; //Will update player movement every 3 seconds of game delta time
+        this.playerMovementTimer = 0;
     }
 
     /**
@@ -48,7 +52,6 @@ public class BoardController
      */
     public void createPlayers()
     {
-        //ArrayList<Vector> playerLocations = new ArrayList<>();
         boolean done = false;
 
         while (!done)
@@ -56,52 +59,43 @@ public class BoardController
             for (int i = 0; i < aPlayers.length; i++)
             {
                 //TODO Use X and Y values before multiplied to add to Board array
-                //TODO Make sure to change Board structure to use Pieces() class
+                //TODO Make sure to change Board structure to use Pieces
                 Random aRan = new Random();
-                float x = aRan.nextInt(numberOfColumns);
-                x *= pixelBlockWidth + pixelBlockWidth;
+                int xArrayLocation = aRan.nextInt(numberOfColumns);
+                float xDrawLocation = xArrayLocation * pixelBlockWidth + pixelBlockWidth; //Default draw location will be slightly away from the edge, it's why pixelBlockwidth is added afterwards
 
-                float y = aRan.nextInt(numberOfRows);
-                y *= pixelBlockHeight + pixelBlockHeight;
+                int yArrayLocation = aRan.nextInt(numberOfRows);
+                float yDrawLocation = yArrayLocation * pixelBlockHeight + pixelBlockHeight;
 
-                Color aColor = new Color((int) x);
-                aPlayers[i] = new Player(x + pixelBlockWidth / 2, y + pixelBlockHeight / 2, Color.FIREBRICK, pixelBlockWidth, pixelBlockHeight, playerNames[i]);
+                //Color aColor = new Color((int) x);
+                aPlayers[i] = new Player(xArrayLocation, yArrayLocation, Color.FIREBRICK, pixelBlockWidth, pixelBlockHeight, playerNames[i]);
             }
             done = true;
         }
     }
 
+    /**
+     * Creates an array of GraphicsTiles objects. Using the i and j values in the loops for x/y tile location
+     */
     public void createArray()
     {
-        //TODO Create way to add Player Pieces
-
-        float y = pixelBlockHeight;
-        float x = pixelBlockWidth;
-
-        minimumX = pixelBlockWidth;
-        minimumY = pixelBlockHeight;
-
-        for (int i = 0; i < aBoard.boardArray.length; i++)
+        for (int i = 0; i < tileBoard.boardArray.length; i++)
         {
-            for (int j = 0; j < aBoard.boardArray[i].length; j++)
+            for (int j = 0; j < tileBoard.boardArray[i].length; j++)
             {
-                //somePieces[i][j] = new GraphicsTile(x, y, Color.GRAY, blockPixelWidth, blockPixelHeight);
-                GraphicsTile aTile = new GraphicsTile(x, y, Color.GRAY, pixelBlockWidth, pixelBlockHeight);
-                aBoard.boardArray[i][j] = aTile;
-                x += pixelBlockWidth;
+                GraphicsTile aTile = new GraphicsTile(i, j, Color.GRAY, pixelBlockWidth, pixelBlockHeight);
+                tileBoard.boardArray[i][j] = aTile;
             }
-            x = pixelBlockWidth;
-            y += pixelBlockHeight;
         }
     }
 
     public void drawBoard(ShapeRenderer renderer)
     {
-        for (int i = 0; i < aBoard.boardArray.length; i++)
+        for (int i = 0; i < tileBoard.boardArray.length; i++)
         {
-            for (int j = 0; j < aBoard.boardArray[i].length; j++)
+            for (int j = 0; j < tileBoard.boardArray[i].length; j++)
             {
-                Block aBlock = aBoard.boardArray[i][j];
+                Block aBlock = tileBoard.boardArray[i][j];
                 aBlock.draw(renderer);
             }
         }
@@ -117,12 +111,27 @@ public class BoardController
 
     public void updatePlayers()
     {
-        for (Player somePlayer : aPlayers)
-        {
+        playerMovementTimer += Gdx.graphics.getDeltaTime();
 
+        if (playerMovementTimer >= playerUpdateTime) //Updates movement every 3 seconds
+        {
+            //TODO Update player movement
+            for (Player somePlayer : aPlayers)
+            {
+                somePlayer.playerMovement(numberOfRows, numberOfColumns);
+            }
+            totalPlayerMovements++;
+            playerMovementTimer = 0;
         }
-        totalPlayerMovements++;
     }
+    /*
+    public boolean checkPlayerCollision()
+    {
+
+        boolean answer = false;
+
+
+    }*/
 
 
 }

@@ -30,7 +30,7 @@ public class BoardScreen implements Screen
         theCamera = new OrthographicCamera();
         theCamera.setToOrtho(true, 800, 480);
 
-        aBoardController = new BoardController(rows, columns, (theCamera.viewportWidth - 30) / columns, theCamera.viewportHeight / rows, 2);
+        aBoardController = new BoardController(rows, columns, (theCamera.viewportWidth - 30) / columns, theCamera.viewportHeight / rows, 4);
         aBoardController.createArray();
         aBoardController.createPlayers();
 
@@ -71,6 +71,7 @@ public class BoardScreen implements Screen
             this.game.setScreen(aScreen);
             //hide();
         }
+        aBoardController.updatePlayers();
     }
 
     @Override
