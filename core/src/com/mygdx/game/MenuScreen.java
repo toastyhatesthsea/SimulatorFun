@@ -23,8 +23,8 @@ public class MenuScreen implements Screen
         this.aShape = new ShapeRenderer();
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-        this.columns = 40;
-        this.rows = 40;
+        this.columns = 20;
+        this.rows = 20;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MenuScreen implements Screen
     {
         Input anInput = Gdx.input;
 
-        if (anInput.isTouched())
+        if (anInput.isTouched() || anInput.isKeyPressed(Input.Keys.ENTER))
         {
             aGame.setScreen(new BoardScreen(aGame, this, rows, columns));
         }

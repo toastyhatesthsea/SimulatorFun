@@ -110,8 +110,8 @@ public class Player extends Block
         //xDrawLocation + pixelBlockWidth / 2, yDrawLocation + pixelBlockHeight / 2
         aShape.begin(ShapeRenderer.ShapeType.Filled);
         aShape.setColor(color);
-        float xDrawLocation = (xArrayLocation * width + width) + width / 2; //Must divide by 2 to make sure draw location is in middle of block
-        float yDrawLocation = (yArrayLocation * height + height) + height / 2;
+        float xDrawLocation = (xArrayLocation * width) + width / 2; //Must divide by 2 to make sure draw location is in middle of block
+        float yDrawLocation = (yArrayLocation * height) + height / 2;
         aShape.circle(xDrawLocation, yDrawLocation, radius);
         aShape.end();
         drawText();

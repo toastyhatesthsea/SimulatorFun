@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Random;
+import java.util.function.Function;
 
 public class BoardController
 {
@@ -43,34 +44,98 @@ public class BoardController
         this.numberOfPlayers = numberOfPlayers;
         this.aPlayers = new Player[numberOfPlayers];
         this.totalPlayerMovements = 0;
-        this.playerUpdateTime = 0; //Will update player movement every 3 seconds of game delta time
+        this.playerUpdateTime = .3f; //Will update player movement every 3 seconds of game delta time
         this.playerMovementTimer = 0;
     }
 
     /**
-     * Creates players using Player objects and stores them in an array
+     * Creates players at RANDOM locations on the board using Player objects and stores them in an array
      */
-    public void createPlayers()
+    public void createPlayersRandomLocations()
     {
-        boolean done = false;
+        Random aRan = new Random();
+        int currentPlayersAdded = 0;
 
-        while (!done)
+        //This loop will add random players and makes sure that it doesn't add on the same location
+        while (currentPlayersAdded < this.numberOfPlayers)
         {
-            for (int i = 0; i < aPlayers.length; i++)
+            int xArrayLocation = aRan.nextInt(numberOfColumns);
+            int yArrayLocation = aRan.nextInt(numberOfRows);
+
+            if (playerBoard.boardArray[yArrayLocation][xArrayLocation] == null)
             {
-                //TODO Use X and Y values before multiplied to add to Board array
-                //TODO Make sure to change Board structure to use Pieces
-                Random aRan = new Random();
-                int xArrayLocation = aRan.nextInt(numberOfColumns);
-                float xDrawLocation = xArrayLocation * pixelBlockWidth + pixelBlockWidth; //Default draw location will be slightly away from the edge, it's why pixelBlockwidth is added afterwards
-
-                int yArrayLocation = aRan.nextInt(numberOfRows);
-                float yDrawLocation = yArrayLocation * pixelBlockHeight + pixelBlockHeight;
-
-                //Color aColor = new Color((int) x);
-                aPlayers[i] = new Player(xArrayLocation, yArrayLocation, Color.FIREBRICK, pixelBlockWidth, pixelBlockHeight, playerNames[i]);
+                Player aPlayer = new Player(xArrayLocation, yArrayLocation, Color.FIREBRICK, pixelBlockWidth, pixelBlockHeight, playerNames[currentPlayersAdded]);
+                aPlayers[currentPlayersAdded] = aPlayer;
+                playerBoard.boardArray[yArrayLocation][xArrayLocation] = aPlayer;
+                currentPlayersAdded++;
             }
-            done = true;
+        }
+    }
+
+    /**
+     * Creates players at default locations. Which are the corners of the board.
+     */
+    public void createPlayersDefaultLocation()throws IllegalArgumentException
+    {
+        if (numberOfPlayers > 4)
+        {
+            throw new IllegalArgumentException("Too many players and not enough corners, for default corner locations");
+        }
+
+        int currentPlayersAdded = 0;
+        int xVector = numberOfColumns - 1; //To eliminate index out of bounds exception, subtract 1
+        int yVector = numberOfRows - 1;
+        int xArrayLocation = 0;
+        int yArrayLocation = 0;
+
+        //This loop will add random players and makes sure that it doesn't add on the same location
+        //This default player creation will create players starting at the Northwest corner
+        while (currentPlayersAdded < this.numberOfPlayers)
+        {
+            Player aPlayer = new Player(xArrayLocation, yArrayLocation, Color.FIREBRICK, pixelBlockWidth, pixelBlockHeight, playerNames[currentPlayersAdded]);
+            aPlayers[currentPlayersAdded] = aPlayer;
+            playerBoard.boardArray[yArrayLocation][xArrayLocation] = aPlayer;
+            currentPlayersAdded++;
+
+            //SouthEast Corner
+            if (xArrayLocation == 0 && yArrayLocation == 0)
+            {
+                xArrayLocation += xVector;
+                yArrayLocation += yVector;
+            }
+            //SouthWest Corner
+            else if (xArrayLocation == xVector && yArrayLocation == yVector)
+            {
+                xArrayLocation -= xVector;
+            }
+            //NorthEast Corner
+            else
+            {
+                xArrayLocation += xVector;
+                yArrayLocation -= yVector;
+            }
+        }
+    }
+
+    private void playerAdder(randomCreatePlayer createPlayerFunc, randomizer randomdizerFunc)
+    {
+        Random aRan = new Random();
+        int currentPlayersAdded = 0;
+
+
+        //This loop will add random players and makes sure that it doesn't add on the same location
+        while (currentPlayersAdded < this.numberOfPlayers)
+        {
+            int xArrayLocation = randomdizerFunc.process(aRan, numberOfColumns);
+            int yArrayLocation = randomdizerFunc.process(aRan, numberOfRows);
+
+            if (createPlayerFunc.process(playerBoard.boardArray, yArrayLocation, xArrayLocation))
+            {
+                Player aPlayer = new Player(xArrayLocation, yArrayLocation, Color.FIREBRICK, pixelBlockWidth, pixelBlockHeight, playerNames[currentPlayersAdded]);
+                aPlayers[currentPlayersAdded] = aPlayer;
+                playerBoard.boardArray[yArrayLocation][xArrayLocation] = aPlayer;
+                currentPlayersAdded++;
+            }
         }
     }
 
@@ -109,6 +174,19 @@ public class BoardController
         }
     }
 
+    public void decreaseSpeed()
+    {
+        playerUpdateTime += 0.01f;
+    }
+
+    public void increaseSpeed()
+    {
+        if ((playerUpdateTime - 0.01f) >= 0.0f)
+        {
+            playerUpdateTime -= 0.01f;
+        }
+    }
+
     public void updatePlayers()
     {
         playerMovementTimer += Gdx.graphics.getDeltaTime();
@@ -119,19 +197,20 @@ public class BoardController
             for (Player somePlayer : aPlayers)
             {
                 somePlayer.playerMovement(numberOfRows, numberOfColumns);
+                assert somePlayer.yArrayLocation < numberOfRows;
             }
             totalPlayerMovements++;
             playerMovementTimer = 0;
         }
     }
-    /*
-    public boolean checkPlayerCollision()
-    {
+}
 
-        boolean answer = false;
+interface randomCreatePlayer
+{
+    boolean process(Object[][] anOb, int row, int column);
+}
 
-
-    }*/
-
-
+interface randomizer
+{
+    int process(Random aRan, int maxNumber);
 }

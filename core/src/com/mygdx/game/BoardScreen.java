@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.awt.image.Kernel;
+
 public class BoardScreen implements Screen
 {
 
@@ -30,9 +32,12 @@ public class BoardScreen implements Screen
         theCamera = new OrthographicCamera();
         theCamera.setToOrtho(true, 800, 480);
 
-        aBoardController = new BoardController(rows, columns, (theCamera.viewportWidth - 30) / columns, theCamera.viewportHeight / rows, 4);
+        int rightSideBuffer = 0;
+        int bottomEdgeBuffer = 0;
+        //Subtracting the rightSideBuffer from theCamera.viewportWidth or height will leave blank space on the right side or bottom side
+        aBoardController = new BoardController(rows, columns, (theCamera.viewportWidth - rightSideBuffer) / columns, (theCamera.viewportHeight - bottomEdgeBuffer) / rows, 4);
         aBoardController.createArray();
-        aBoardController.createPlayers();
+        aBoardController.createPlayersDefaultLocation();
 
         //this.aBoard = new Board(rows, columns, (theCamera.viewportWidth-30)/columns, theCamera.viewportHeight/rows);
 
@@ -54,10 +59,13 @@ public class BoardScreen implements Screen
         aShape.setProjectionMatrix(theCamera.combined);
         aBoardController.drawBoard(aShape);
         aBoardController.drawPlayers(aShape);
-        aShape.begin(ShapeRenderer.ShapeType.Filled);
+        game.batch.begin();
+        game.font.draw(game.batch, "Total Moves -- " + aBoardController.totalPlayerMovements, 100, 150);
+        game.batch.end();
+        /*aShape.begin(ShapeRenderer.ShapeType.Filled);
         aShape.setColor(Color.FOREST);
         aShape.circle(0, 0, 30);
-        aShape.end();
+        aShape.end();*/
         update();
     }
 
@@ -70,6 +78,14 @@ public class BoardScreen implements Screen
             //ScreenUtils.clear(0, 0, 02.f, 1);
             this.game.setScreen(aScreen);
             //hide();
+        }
+        if (anInput.isKeyPressed(Input.Keys.RIGHT))
+        {
+            aBoardController.increaseSpeed();
+        }
+        if (anInput.isKeyPressed(Input.Keys.LEFT))
+        {
+            aBoardController.decreaseSpeed();
         }
         aBoardController.updatePlayers();
     }

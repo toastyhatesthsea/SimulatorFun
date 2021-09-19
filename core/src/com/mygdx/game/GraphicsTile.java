@@ -30,7 +30,7 @@ public class GraphicsTile extends Block
     {
         aShape.begin(ShapeRenderer.ShapeType.Line);
         aShape.setColor(color);
-        aShape.rect(width + xArrayLocation * width, height + yArrayLocation * height, width, height);
+        aShape.rect(xArrayLocation * width, yArrayLocation * height, width, height);
         aShape.end();
     }
 
